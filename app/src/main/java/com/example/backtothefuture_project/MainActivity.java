@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
     }
-
+    //
     public void startSnake(View view){
         Intent intent = new Intent (this,SnakeGame.class);
         startActivity(intent);
