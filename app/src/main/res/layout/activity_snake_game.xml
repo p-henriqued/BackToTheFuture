@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:background="#2C2C2C"
+        android:background="#000000"
         android:alpha="0.8"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
@@ -30,7 +30,7 @@
                 android:orientation="horizontal"
                 android:layout_centerInParent="true">
                 <ImageView
-                    android:src="@drawable/apple"
+                    android:src="@drawable/gosthpacman"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:scaleType="fitXY"/>

@@ -6,13 +6,13 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 
 public class Snake {
-
+    private boolean move_left, move_rigth, move_top, move_botom;
     private Bitmap bm, bm_head_up, bm_head_down, bm_head_left, bm_head_right, bm_body_vertical, bm_body_horizontal, bm_body_top_right, bm_body_top_left, bm_body_bottom_right, bm_body_bottom_left,
             bm_tail_right, bm_tail_left, bm_tail_up, bm_tail_down;
 
     private int x, y, length;
     private ArrayList<SnakePart> snakePartList = new ArrayList<>();
-
+    // ideia da criação: https://github.com/mdibaiee/super-snake
     public Snake(Bitmap bm, int x, int y, int length){
         this.bm = bm;
         this.x = x;
@@ -38,6 +38,70 @@ public class Snake {
             snakePartList.add(new SnakePart(bm_body_horizontal, snakePartList.get(i-1).getX() - GameView.sizeOfMapa, y));
         }
         snakePartList.add(new SnakePart(bm_tail_right, snakePartList.get(length-2).getX() - GameView.sizeOfMapa, y) );
+        //inicializar a Snake  movendo para direita
+        setMove_rigth(true);
+    }
+    // ideia de uptade: https://github.com/GiovanniColonni/Snake-AndroidStudio
+    //após cada uptade, a posição da parte da cobra e o BITMAP atrás serão iguais aos da frente
+    public void update(){
+        for(int i= length -1; i> 0; i--){
+            snakePartList.get(i).setX(snakePartList.get(i-1).getX());
+            snakePartList.get(i).setY(snakePartList.get(i-1).getY());
+        }
+        //ajuste para o corpo traseiro move ao longo
+        if(move_rigth){
+            snakePartList.get(0).setX(snakePartList.get(0).getX()+GameView.sizeOfMapa);
+            snakePartList.get(0).setBm(bm_head_right);
+        }else if(move_left){
+            snakePartList.get(0).setX(snakePartList.get(0).getX()-GameView.sizeOfMapa);
+            snakePartList.get(0).setBm(bm_head_left);
+        }else if(move_top){
+            snakePartList.get(0).setY(snakePartList.get(0).getY()-GameView.sizeOfMapa);
+            snakePartList.get(0).setBm(bm_head_up);
+        }else if(move_botom){
+            snakePartList.get(0).setY(snakePartList.get(0).getY()+GameView.sizeOfMapa);
+            snakePartList.get(0).setBm(bm_head_down);
+        }
+        //Quando a cobra girar, para o corpo acompanhar o movimento.
+        for(int i=1; i < length-1;i++){
+
+            if(snakePartList.get(i).getrLeft().intersect(snakePartList.get(i+1).getrBody()) && snakePartList.get(i).getrBottom().intersect(snakePartList.get(i-1).getrBody())
+            || snakePartList.get(i).getrLeft().intersect(snakePartList.get(i-1).getrBody()) && snakePartList.get(i).getrBottom().intersect(snakePartList.get(i+1).getrBody()) ){
+                //Sudeste
+                snakePartList.get(i).setBm(bm_body_bottom_left);
+            }else if(snakePartList.get(i).getrRight().intersect(snakePartList.get(i+1).getrBody()) && snakePartList.get(i).getrBottom().intersect(snakePartList.get(i-1).getrBody())
+                    || snakePartList.get(i).getrRight().intersect(snakePartList.get(i-1).getrBody()) && snakePartList.get(i).getrBottom().intersect(snakePartList.get(i+1).getrBody())){
+                //Sudoeste
+                snakePartList.get(i).setBm(bm_body_bottom_right);
+            }else if(snakePartList.get(i).getrLeft().intersect(snakePartList.get(i+1).getrBody()) && snakePartList.get(i).getrTop().intersect(snakePartList.get(i-1).getrBody())
+                    || snakePartList.get(i).getrLeft().intersect(snakePartList.get(i-1).getrBody()) && snakePartList.get(i).getrTop().intersect(snakePartList.get(i+1).getrBody())){
+                //Noroeste
+                snakePartList.get(i).setBm(bm_body_top_left);
+            }else if(snakePartList.get(i).getrRight().intersect(snakePartList.get(i+1).getrBody()) && snakePartList.get(i).getrTop().intersect(snakePartList.get(i-1).getrBody())
+                    || snakePartList.get(i).getrRight().intersect(snakePartList.get(i-1).getrBody()) && snakePartList.get(i).getrTop().intersect(snakePartList.get(i+1).getrBody())){
+                //Nordeste
+                snakePartList.get(i).setBm(bm_body_top_right);
+            }else if(snakePartList.get(i).getrTop().intersect(snakePartList.get(i+1).getrBody()) && snakePartList.get(i).getrBottom().intersect(snakePartList.get(i-1).getrBody())
+                    || snakePartList.get(i).getrTop().intersect(snakePartList.get(i-1).getrBody()) && snakePartList.get(i).getrBottom().intersect(snakePartList.get(i+1).getrBody())){
+                //
+                snakePartList.get(i).setBm(bm_body_vertical);
+            }else if(snakePartList.get(i).getrLeft().intersect(snakePartList.get(i+1).getrBody()) && snakePartList.get(i).getrRight().intersect(snakePartList.get(i-1).getrBody())
+                    || snakePartList.get(i).getrLeft().intersect(snakePartList.get(i-1).getrBody()) && snakePartList.get(i).getrRight().intersect(snakePartList.get(i+1).getrBody())){
+                //
+                snakePartList.get(i).setBm(bm_body_horizontal);
+            }
+        }
+
+        if(snakePartList.get(length-1).getrRight().intersect(snakePartList.get(length-2).getrBody()) ){
+            snakePartList.get(length-1).setBm(bm_tail_right);
+        }else if(snakePartList.get(length-1).getrLeft().intersect(snakePartList.get(length-2).getrBody()) ) {
+            snakePartList.get(length - 1).setBm(bm_tail_left);
+        }else if(snakePartList.get(length-1).getrTop().intersect(snakePartList.get(length-2).getrBody()) ) {
+            snakePartList.get(length - 1).setBm(bm_tail_up);
+        }else if(snakePartList.get(length-1).getrBottom().intersect(snakePartList.get(length-2).getrBody()) ) {
+            snakePartList.get(length - 1).setBm(bm_tail_down);
+        }
+
     }
 
     public void draw(Canvas canvas){
@@ -184,5 +248,40 @@ public class Snake {
     }
     public void setSnakePartList(ArrayList<SnakePart> snakePartList) {
         this.snakePartList = snakePartList;
+    }
+
+    public boolean isMove_left() {
+        return move_left;
+    }
+    public void setMove_left(boolean move_left) {
+        move_s();
+        this.move_left = move_left;
+    }
+    public boolean isMove_rigth() {
+        return move_rigth;
+    }
+    public void setMove_rigth(boolean move_rigth) {
+        move_s();
+        this.move_rigth = move_rigth;
+    }
+    public boolean isMove_top() {
+        return move_top;
+    }
+    public void setMove_top(boolean move_top) {
+        move_s();
+        this.move_top = move_top;
+    }
+    public boolean isMove_botom() {
+        return move_botom;
+    }
+    public void setMove_botom(boolean move_botom) {
+        move_s();
+        this.move_botom = move_botom;
+    }
+    public void move_s(){
+        this.move_left = false;
+        this.move_rigth = false;
+        this.move_botom = false;
+        this.move_top = false;
     }
 }
