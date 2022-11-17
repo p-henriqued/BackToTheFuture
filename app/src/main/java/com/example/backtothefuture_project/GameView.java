@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -12,10 +13,11 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.LogRecord;
 
 public class GameView extends View {
-    private Bitmap bmSpace, bmSpace2, bmSnake;
+    private Bitmap bmSpace, bmSpace2, bmSnake, bmBlinky;
     public static int sizeOfMapa = 75*Constantes.SCREEN_WIDTH/1080;
     private int h = 21;
     private int w = 12;
@@ -25,7 +27,7 @@ public class GameView extends View {
     private float mx, my;
     private Handler handler;
     private Runnable runnable;
-
+    private Blinky blinky;
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         bmSpace = BitmapFactory.decodeResource(this.getResources(),R.drawable.backgroundgame);
@@ -35,6 +37,9 @@ public class GameView extends View {
 
         bmSnake = BitmapFactory.decodeResource(this.getResources(),R.drawable.snake);
         bmSnake = Bitmap.createScaledBitmap(bmSnake,14*sizeOfMapa,sizeOfMapa, true );
+
+        bmBlinky = BitmapFactory.decodeResource(this.getResources(),R.drawable.ghostpacman);
+        bmBlinky = Bitmap.createScaledBitmap(bmBlinky,sizeOfMapa,sizeOfMapa, true );
 
         for(int i=0; i<h; i++){
             for(int j=0; j<w;j++){
@@ -49,6 +54,7 @@ public class GameView extends View {
         }
 
         snake = new Snake(bmSnake, spaceList.get(126).getX(), spaceList.get(126).getY(),4);
+        blinky = new Blinky(bmBlinky, spaceList.get(randomBlinky()[0]).getX(), spaceList.get(randomBlinky()[1]).getY() );
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -107,6 +113,30 @@ public class GameView extends View {
         }
         snake.update();
         snake.draw(canvas);
+        blinky.draw(canvas);
         handler.postDelayed(runnable, 100);
+    }
+
+
+    //Respaw aleatório do Blinky
+    public int[] randomBlinky(){
+        int []xy = new int[2];
+        Random r = new Random();
+        xy[0] = r.nextInt(spaceList.size() - 1);
+        xy[1] = r.nextInt(spaceList.size() - 1);
+        Rect rect = new Rect(spaceList.get(xy[0]).getX(), spaceList.get(xy[1]).getY(), spaceList.get(xy[0]).getX()+sizeOfMapa, spaceList.get(xy[1]).getY()+sizeOfMapa );
+        boolean check = true;
+        while(check){
+            check = false;
+            for(int i = 0; i < snake.getSnakePartList().size(); i++){
+                if(rect.intersect(snake.getSnakePartList().get(i).getrBody())){
+                    check = true;
+                    xy[0] = r.nextInt( spaceList.size()-1);
+                    xy[1] = r.nextInt( spaceList.size()-1);
+                    rect = new Rect(spaceList.get(xy[0]).getX(), spaceList.get(xy[1]).getY(), spaceList.get(xy[0]).getX()+sizeOfMapa, spaceList.get(xy[1]).getY()+sizeOfMapa );
+                }
+            }
+        }
+        return xy;
     }
 }

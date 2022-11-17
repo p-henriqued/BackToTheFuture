@@ -30,7 +30,7 @@
                 android:orientation="horizontal"
                 android:layout_centerInParent="true">
                 <ImageView
-                    android:src="@drawable/gosthpacman"
+                    android:src="@drawable/ghostpacman"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:scaleType="fitXY"/>
