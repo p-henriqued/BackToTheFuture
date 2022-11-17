@@ -44,4 +44,9 @@ public class Blinky {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bm, x, y, null);
     }
+
+    public void reset(int nx, int ny) {
+        this.x = nx;
+        this.y = ny;
+    }
 }

@@ -114,6 +114,11 @@ public class GameView extends View {
         snake.update();
         snake.draw(canvas);
         blinky.draw(canvas);
+        if(snake.getSnakePartList().get(0).getrBody().intersect(blinky.getR()) ){
+            randomBlinky();
+            blinky.reset(spaceList.get(randomBlinky()[0]).getX(), spaceList.get(randomBlinky()[1]).getY() );
+            snake.addPart();
+        }
         handler.postDelayed(runnable, 100);
     }
 

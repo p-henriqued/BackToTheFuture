@@ -284,4 +284,18 @@ public class Snake {
         this.move_botom = false;
         this.move_top = false;
     }
+
+    public void addPart() {
+        SnakePart sn = this.snakePartList.get(length-1);
+        this.length += 1;
+        if(sn.getBm() == bm_tail_right){
+            this.snakePartList.add(new SnakePart(bm_tail_right, sn.getX() - GameView.sizeOfMapa, sn.getY() ) );
+        } else if(sn.getBm() == bm_tail_left){
+            this.snakePartList.add(new SnakePart(bm_tail_left, sn.getX() + GameView.sizeOfMapa, sn.getY() ) );
+        } else if(sn.getBm() == bm_tail_up){
+            this.snakePartList.add(new SnakePart(bm_tail_up, sn.getX(), sn.getY() + GameView.sizeOfMapa ) );
+        } else if(sn.getBm() == bm_tail_down){
+            this.snakePartList.add(new SnakePart(bm_tail_down, sn.getX() , sn.getY() - GameView.sizeOfMapa ) );
+        }
+    }
 }
