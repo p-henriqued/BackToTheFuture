@@ -1,6 +1,7 @@
 package com.example.backtothefuture_project;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -17,6 +19,7 @@ import java.util.Random;
 import java.util.logging.LogRecord;
 
 public class GameView extends View {
+
     private Bitmap bmSpace, bmSpace2, bmSnake, bmBlinky;
     public static int sizeOfMapa = 75*Constantes.SCREEN_WIDTH/1080;
     private int h = 21;
@@ -28,8 +31,16 @@ public class GameView extends View {
     private Handler handler;
     private Runnable runnable;
     private Blinky blinky;
+    public static boolean isPlaying = true;
+    public static int score = 0, bestScore = 0;
+    private Context context;
     public GameView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
+        SharedPreferences sp = context.getSharedPreferences("gameconfigs", Context.MODE_PRIVATE);
+        if(sp != null){
+            bestScore = sp.getInt("BestScore",0);
+        }
         bmSpace = BitmapFactory.decodeResource(this.getResources(),R.drawable.backgroundgame);
         bmSpace = Bitmap.createScaledBitmap(bmSpace,sizeOfMapa,sizeOfMapa, true );
         bmSpace2 = BitmapFactory.decodeResource(this.getResources(),R.drawable.backgroundgame2);
@@ -62,6 +73,7 @@ public class GameView extends View {
                invalidate();
             }
         };
+
     }
 
     @Override
@@ -111,13 +123,35 @@ public class GameView extends View {
         for(int i=0; i<spaceList.size();i++){
             canvas.drawBitmap(spaceList.get(i).getBm(), spaceList.get(i).getX(), spaceList.get(i).getY(), null);
         }
-        snake.update();
+        if(isPlaying){
+            snake.update();
+            if(snake.getSnakePartList().get(0).getX() < this.spaceList.get(0).getX() || snake.getSnakePartList().get(0).getY() < this.spaceList.get(0).getY()
+            || snake.getSnakePartList().get(0).getY()+sizeOfMapa > this.spaceList.get(this.spaceList.size()-1).getY()+sizeOfMapa
+            || snake.getSnakePartList().get(0).getX()+sizeOfMapa > this.spaceList.get(this.spaceList.size()-1).getX()+sizeOfMapa){
+                gameOver();
+            }
+            for(int i=1;i<snake.getSnakePartList().size();i++){
+                if(snake.getSnakePartList().get(0).getrBody().intersect(snake.getSnakePartList().get(i).getrBody())){
+                    gameOver();
+                }
+            }
+        }
         snake.draw(canvas);
         blinky.draw(canvas);
         if(snake.getSnakePartList().get(0).getrBody().intersect(blinky.getR()) ){
             randomBlinky();
             blinky.reset(spaceList.get(randomBlinky()[0]).getX(), spaceList.get(randomBlinky()[1]).getY() );
             snake.addPart();
+            score++;
+            SnakeGame.txtscore.setText(score+"");
+            if(score > bestScore){
+                bestScore = score;
+                SharedPreferences sp = context.getSharedPreferences("gameconfigs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt("bestscore", bestScore);
+                editor.apply();
+                SnakeGame.txt_bestscore.setText(bestScore+"");
+            }
         }
         handler.postDelayed(runnable, 100);
     }
@@ -143,5 +177,11 @@ public class GameView extends View {
             }
         }
         return xy;
+    }
+    private void gameOver(){
+        isPlaying = false;
+        SnakeGame.txt_bestscore.setText(bestScore+"");
+        SnakeGame.txtscore.setText(score+"");
+
     }
 }
