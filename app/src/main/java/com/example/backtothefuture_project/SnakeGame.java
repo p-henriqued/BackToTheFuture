@@ -8,12 +8,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SnakeGame extends AppCompatActivity {
     private GameView gameView;
     public static Dialog dialogScore;
-    public static TextView txtscore, txt_bestscore;
+    public static ImageView img_start;
+    public static TextView txtscore, txt_bestscore, txt_startScore, txt_startBestScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class SnakeGame extends AppCompatActivity {
         }
         SnakeGame.txt_bestscore.setText(bestScore+"");
         dialogScore = new Dialog(this);
+        
     }
 
 }

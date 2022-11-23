@@ -86,24 +86,33 @@ public class GameView extends View {
                     my = event.getY();
                     move = true;
                 }else{
-                    if(mx - event.getX() > 100*Constantes.SCREEN_WIDTH/1080 && !snake.isMove_rigth()){
+                    if(mx - event.getX() > 100 && !snake.isMove_rigth()){
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_left(true);
-                    }else if(event.getX() - mx > 100*Constantes.SCREEN_WIDTH/1080 && !snake.isMove_left()) {
+                        isPlaying =true;
+
+                    }else if(event.getX() - mx > 100 && !snake.isMove_left()) {
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_rigth(true);
-                    }else if(my - event.getY() > 100*Constantes.SCREEN_WIDTH/1080 && !snake.isMove_botom()) {
+                        isPlaying =true;
+
+                    }else if(my - event.getY() > 100 && !snake.isMove_botom()) {
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_top(true);
-                    }else if(event.getX() - my  > 100*Constantes.SCREEN_WIDTH/1080 && !snake.isMove_top()) {
+                        isPlaying =true;
+
+                    }else if(event.getX() - my  > 100 && !snake.isMove_top()) {
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_botom(true);
+                        isPlaying =true;
+
                     }
                 }
+                break;
             }
             case MotionEvent.ACTION_UP:{
                 mx = 0;
@@ -119,10 +128,10 @@ public class GameView extends View {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         canvas.drawColor(0xFF040953);
-
         for(int i=0; i<spaceList.size();i++){
             canvas.drawBitmap(spaceList.get(i).getBm(), spaceList.get(i).getX(), spaceList.get(i).getY(), null);
         }
+
         if(isPlaying){
             snake.update();
             if(snake.getSnakePartList().get(0).getX() < this.spaceList.get(0).getX() || snake.getSnakePartList().get(0).getY() < this.spaceList.get(0).getY()
