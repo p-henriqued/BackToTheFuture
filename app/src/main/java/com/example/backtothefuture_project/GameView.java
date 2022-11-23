@@ -31,7 +31,7 @@ public class GameView extends View {
     private Handler handler;
     private Runnable runnable;
     private Blinky blinky;
-    public static boolean isPlaying = true;
+    public static boolean isPlaying = false;
     public static int score = 0, bestScore = 0;
     private Context context;
     public GameView(Context context, @Nullable AttributeSet attrs) {
@@ -189,8 +189,11 @@ public class GameView extends View {
     }
     private void gameOver(){
         isPlaying = false;
-        SnakeGame.txt_bestscore.setText(bestScore+"");
-        SnakeGame.txtscore.setText(score+"");
+        SnakeGame.dialogScore.show();
+        SnakeGame.txt_startBestScore.setText(bestScore+"");
+        SnakeGame.txt_startScore.setText(score+"");
+    }
+    public void reset(){
 
     }
 }

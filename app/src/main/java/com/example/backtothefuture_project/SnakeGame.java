@@ -7,14 +7,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SnakeGame extends AppCompatActivity {
     private GameView gameView;
     public static Dialog dialogScore;
-    public static ImageView img_start;
+    public static ImageView img_touch;
     public static TextView txtscore, txt_bestscore, txt_startScore, txt_startBestScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +30,11 @@ public class SnakeGame extends AppCompatActivity {
         Constantes.SCREEN_HEIGHT = displayMetrics.heightPixels;
         setContentView(R.layout.activity_snake_game);
 
+        //img_touch = findViewById(R.id.touch);
+        gameView = findViewById(R.id.gameView);
         txtscore = findViewById(R.id.txtscore);
         txt_bestscore = findViewById(R.id.txt_bestscore);
         scores();
-
     }
     private void scores(){
         int bestScore = 0;
@@ -42,7 +45,19 @@ public class SnakeGame extends AppCompatActivity {
         SnakeGame.txt_bestscore.setText(bestScore+"");
         dialogScore = new Dialog(this);
         txt_startScore = dialogScore.findViewById(R.id.txt_dialog_score);
-        
+        txt_startBestScore = dialogScore.findViewById(R.id.txt_dialog_Bestscore);
+        txt_startBestScore.setText(bestScore+"");
+        dialogScore.setCanceledOnTouchOutside(false);
+        RelativeLayout rl_start = dialogScore.findViewById(R.id.rl_start);
+        rl_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_touch.setVisibility(View.VISIBLE);
+                //gameView.reset();
+                dialogScore.dismiss();
+            }
+        });
+        dialogScore.show();
     }
 
 }
