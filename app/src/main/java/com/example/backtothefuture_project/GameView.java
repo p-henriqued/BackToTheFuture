@@ -91,25 +91,25 @@ public class GameView extends View {
                         my = event.getY();
                         snake.setMove_left(true);
                         isPlaying =true;
-
+                        SnakeGame.img_touch.setVisibility(INVISIBLE);
                     }else if(event.getX() - mx > 100 && !snake.isMove_left()) {
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_rigth(true);
                         isPlaying =true;
-
+                        SnakeGame.img_touch.setVisibility(INVISIBLE);
                     }else if(my - event.getY() > 100 && !snake.isMove_botom()) {
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_top(true);
                         isPlaying =true;
-
-                    }else if(event.getX() - my  > 100 && !snake.isMove_top()) {
+                        SnakeGame.img_touch.setVisibility(INVISIBLE);
+                    }else if(event.getY() - my  > 100 && !snake.isMove_top()) {
                         mx = event.getX();
                         my = event.getY();
                         snake.setMove_botom(true);
                         isPlaying =true;
-
+                        SnakeGame.img_touch.setVisibility(INVISIBLE);
                     }
                 }
                 break;
@@ -194,6 +194,17 @@ public class GameView extends View {
         SnakeGame.txt_startScore.setText(score+"");
     }
     public void reset(){
-
+        for(int i=0; i<h;i++){
+            for(int j=0;j<w;j++){
+                if((j+i)%2 == 0 ){
+                    spaceList.add(new SpaceBackground(bmSpace, j*bmSpace.getWidth() + Constantes.SCREEN_WIDTH/2 - (w/2) * bmSpace.getWidth(), i*bmSpace.getHeight()+50*Constantes.SCREEN_HEIGHT/1920, bmSpace.getWidth(),bmSpace.getHeight()));
+                }else{
+                    spaceList.add(new SpaceBackground(bmSpace2, j*bmSpace2.getWidth() + Constantes.SCREEN_WIDTH/2 - (w/2) * bmSpace2.getWidth(), i*bmSpace2.getHeight()+50*Constantes.SCREEN_HEIGHT/1920, bmSpace2.getWidth(),bmSpace2.getHeight()));
+                }
+            }
+        }
+        snake = new Snake(bmSnake,spaceList.get(126).getX(), spaceList.get(126).getY(), 4);
+        blinky = new Blinky(bmBlinky, spaceList.get(randomBlinky()[0]).getX(), spaceList.get(randomBlinky()[1]).getY() );
+        score = 0;
     }
 }

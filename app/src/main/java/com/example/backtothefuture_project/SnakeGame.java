@@ -30,7 +30,7 @@ public class SnakeGame extends AppCompatActivity {
         Constantes.SCREEN_HEIGHT = displayMetrics.heightPixels;
         setContentView(R.layout.activity_snake_game);
 
-        //img_touch = findViewById(R.id.touch);
+        img_touch = findViewById(R.id.img_touch);
         gameView = findViewById(R.id.gameView);
         txtscore = findViewById(R.id.txtscore);
         txt_bestscore = findViewById(R.id.txt_bestscore);
@@ -44,6 +44,7 @@ public class SnakeGame extends AppCompatActivity {
         }
         SnakeGame.txt_bestscore.setText(bestScore+"");
         dialogScore = new Dialog(this);
+        dialogScore.setContentView(R.layout.dialog_start);
         txt_startScore = dialogScore.findViewById(R.id.txt_dialog_score);
         txt_startBestScore = dialogScore.findViewById(R.id.txt_dialog_Bestscore);
         txt_startBestScore.setText(bestScore+"");
@@ -53,7 +54,7 @@ public class SnakeGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 img_touch.setVisibility(View.VISIBLE);
-                //gameView.reset();
+                gameView.reset();
                 dialogScore.dismiss();
             }
         });
