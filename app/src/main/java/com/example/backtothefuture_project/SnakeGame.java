@@ -41,6 +41,7 @@ public class SnakeGame extends AppCompatActivity {
         }
         SnakeGame.txt_bestscore.setText(bestScore+"");
         dialogScore = new Dialog(this);
+        txt_startScore = dialogScore.findViewById(R.id.txt_dialog_score);
         
     }
 
